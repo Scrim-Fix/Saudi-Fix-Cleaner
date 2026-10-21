@@ -1,31 +1,36 @@
-# 🚀 Saudi Fix Cleaner (Pro Version)
+# Saudi Fix Cleaner
 
-A high-performance automated system optimizer designed to revitalize Windows performance by deep-cleaning system junk and temporary files with a professional terminal interface.
+Windows maintenance script that removes temporary files, empties the Recycle Bin, and flushes the DNS cache. Written in native Batch: no installation, no dependencies.
 
----
+![Platform](https://img.shields.io/badge/platform-Windows%2010%20%7C%2011-0078D4?style=flat-square&logo=windows&logoColor=white)
+![Language](https://img.shields.io/badge/language-Batch-4D4D4D?style=flat-square&logo=windowsterminal&logoColor=white)
+![Requires](https://img.shields.io/badge/requires-Administrator-B22222?style=flat-square)
 
-## ✨ Features & Mission Profile
-* **🚀 Deep User Cleanup:** Forcefully removes personal temporary files (`%temp%`) to reclaim wasted storage.
-* **💻 System Scrubbing:** Cleanses Windows system-level temp files for a leaner OS.
-* **⚡ Prefetch Optimization:** Clears application launch caches to improve boot and loading efficiency.
-* **🗑️ Hard Recycle Bin Reset:** Forces the emptying of the Recycle Bin across all drives.
-* **🌐 Network Revive:** Flushes the DNS cache to resolve connectivity issues and stabilize internet speed.
+## What it does
 
----
+| Step | Target | Method |
+| --- | --- | --- |
+| 1 | User temporary files (`%TEMP%`) | Deletes contents; keeps the folder and its permissions |
+| 2 | Windows temporary files (`C:\Windows\Temp`) | Deletes contents; keeps the folder and its permissions |
+| 3 | Recycle Bin, all drives | `Clear-RecycleBin` (PowerShell) |
+| 4 | DNS resolver cache | `ipconfig /flushdns` |
 
-## 🔒 Security & Transparency
-* **Native Execution:** Uses 100% native Windows commands to ensure maximum stability and zero risk to essential system files.
-* **Open Source Spirit:** As a `.bat` script, you have full visibility of every command. We prioritize trust and transparency for all **Saudi Fix** customers.
-* **Admin-Powered:** Optimized for Administrative execution to handle stubborn system junk.
+Files locked by running programs are skipped, not forced.
 
----
+## Usage
 
-## 🛠️ Deployment Instructions
-1. Download the `SaudiFix.bat` file.
-2. **Right-click** and select **"Run as Administrator"** (Required for deep cleaning).
-3. Press **Any Key** when the "Commander" welcomes you to start the mission.
+1. Download [`SaudiFix.bat`](SaudiFix.bat).
+2. Right-click the file and select **Run as administrator**.
+3. Review the task list and press any key to start.
 
----
-## ⚡ Support
-*Developed with 💚 by **Rashid (Scrim-Fix)** - Founder of **Saudi Fix***
-*"Mission Accomplished, Commander!"*
+The script checks for administrator rights and exits with a message if they are missing.
+
+## Notes
+
+- **Recycle Bin deletion is permanent.** Restore anything you need before running.
+- Prefetch is intentionally not cleared. Windows uses it to speed up application launch, and clearing it slows the next startup.
+- Review the source before running any script with administrator rights. The full logic is in a single readable file.
+
+## Author
+
+**Rashid Alghamdi** · [SaudiFix](https://github.com/Scrim-Fix)

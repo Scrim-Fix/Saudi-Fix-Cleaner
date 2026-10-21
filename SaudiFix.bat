@@ -1,60 +1,63 @@
 @echo off
-title Saudi Fix Professional Tool
+setlocal EnableExtensions
+title Saudi Fix Cleaner
 color 0B
 
-:: ==========================================
-::    SAUDI FIX CLEANER - PRO VERSION
-:: ==========================================
+:: ============================================================
+::  Saudi Fix Cleaner
+::  Removes temporary files, empties the Recycle Bin on all
+::  drives, and flushes the DNS resolver cache.
+:: ============================================================
+
+:: --- Require administrator rights ---------------------------
+net session >nul 2>&1
+if %errorlevel% neq 0 (
+    echo.
+    echo  [ERROR] Administrator rights are required.
+    echo          Right-click SaudiFix.bat and choose "Run as administrator".
+    echo.
+    pause
+    exit /b 1
+)
 
 echo.
-echo  #################################################################
-echo  #                                                               #
-echo  #   XXXXX   XXXX   X   X  XXXX   XXXXX      XXXXX  XXXXX  X   X  #
-echo  #   X      X    X  X   X  X   X    I        X        I     X X   #
-echo  #   XXXXX  XXXXXX  X   X  X   X    I        XXXX     I      X    #
-echo  #       X  X    X  X   X  X   X    I        X        I     X X   #
-echo  #   XXXXX  X    X  XXXXX  XXXX   XXXXX      X      XXXXX  X   X  #
-echo  #                                                               #
-echo  #################################################################
+echo  ============================================================
+echo    SAUDI FIX CLEANER
+echo  ============================================================
 echo.
-echo              WELCOME BACK, COMMANDER SAUDI FIX
-echo  -----------------------------------------------------------------
+echo  Tasks:
+echo    1. User temporary files      (%%TEMP%%)
+echo    2. Windows temporary files   (C:\Windows\Temp)
+echo    3. Recycle Bin               (all drives)
+echo    4. DNS resolver cache
 echo.
-echo  [!] Status: Ready for Deep Cleaning
-echo.
-echo  Press ANY KEY to start cleaning process...
+echo  Close open programs before continuing.
+echo  Press any key to start, or close this window to cancel.
 pause >nul
 
-:: 1. User Temp
+:: --- 1. User temp (contents only; folder and permissions kept)
 echo.
-echo  [-] Cleaning User Temp...
-del /s /f /q "%temp%\*.*" >nul 2>&1
-rd /s /q "%temp%" >nul 2>&1
-md "%temp%" >nul 2>&1
+echo  [1/4] Cleaning user temporary files...
+del /s /f /q "%TEMP%\*" >nul 2>&1
+for /d %%D in ("%TEMP%\*") do rd /s /q "%%D" >nul 2>&1
 
-:: 2. System Temp
-echo  [-] Cleaning Windows Temp...
-del /s /f /q "C:\Windows\Temp\*.*" >nul 2>&1
-rd /s /q "C:\Windows\Temp" >nul 2>&1
-md "C:\Windows\Temp" >nul 2>&1
+:: --- 2. Windows temp (contents only) ------------------------
+echo  [2/4] Cleaning Windows temporary files...
+del /s /f /q "%SystemRoot%\Temp\*" >nul 2>&1
+for /d %%D in ("%SystemRoot%\Temp\*") do rd /s /q "%%D" >nul 2>&1
 
-:: 3. Prefetch
-echo  [-] Cleaning Prefetch...
-del /s /f /q "C:\Windows\Prefetch\*.*" >nul 2>&1
+:: --- 3. Recycle Bin on every drive --------------------------
+echo  [3/4] Emptying Recycle Bin...
+powershell -NoProfile -Command "Clear-RecycleBin -Force -ErrorAction SilentlyContinue" >nul 2>&1
 
-:: 4. Recycle Bin
-echo  [-] Emptying Recycle Bin...
-rd /s /q %systemdrive%\$Recycle.Bin >nul 2>&1
-
-:: 5. Internet DNS Cache
-echo  [-] Flushing Internet DNS Cache...
+:: --- 4. DNS cache -------------------------------------------
+echo  [4/4] Flushing DNS resolver cache...
 ipconfig /flushdns >nul
 
 echo.
-echo  =================================================================
+echo  ============================================================
+echo    Done. Files in use by running programs were skipped.
+echo  ============================================================
 echo.
-echo        MISSION ACCOMPLISHED YA SAUDI FIX!
-echo           (Internet and System Cleaned)
-echo.
-echo  =================================================================
 pause
+endlocal
